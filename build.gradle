@@ -1,0 +1,22 @@
+group 'uk.co.optimisticpanda'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "https://dl.bintray.com/ylemoigne/maven" }
+}
+
+dependencies {
+
+    compile 'com.github.tomakehurst:wiremock:2.18.0',
+            'org.mongodb:mongodb-driver-async:3.6.3',
+            'org.mongodb:mongo-java-driver:3.6.3',
+            'ch.qos.logback:logback-classic:1.0.9'
+
+    testCompile 'com.squareup.okhttp3:okhttp:3.10.0'
+
+}

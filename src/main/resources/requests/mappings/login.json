@@ -1,0 +1,32 @@
+{
+  "request": {
+    "urlPath": "/login",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.username"
+      },
+      {
+        "matchesJsonPath": "$.password"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "Successful login!"
+  },
+  "postServeActions": {
+    "mongo-request-recorder": {
+      "collection-name": "requests",
+      "tags": [
+        "login"
+      ],
+      "fieldExtractors": {
+        "body" : {
+          "username": "$.username",
+          "password": "$.password"
+        }
+      }
+    }
+  }
+}
