@@ -1,0 +1,23 @@
+{
+  "request": {
+    "urlPattern": "/user/([a-z]*)/session",
+    "method": "DELETE"
+  },
+  "response": {
+    "status": 200,
+    "body": "Successful logout!"
+  },
+  "postServeActions": {
+    "mongo-request-recorder": {
+      "collection-name": "requests",
+      "tags": [
+        "logout"
+      ],
+      "fieldExtractors": {
+        "path" : {
+          "username" : "/user/([a-z]*)/session"
+        }
+      }
+    }
+  }
+}

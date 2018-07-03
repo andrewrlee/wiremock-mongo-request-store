@@ -1,0 +1,32 @@
+{
+  "request": {
+    "urlPattern": "/user/([a-z]*)/books/(.*)",
+    "method": "PUT",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.isbn"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "Successful login!"
+  },
+  "postServeActions": {
+    "mongo-request-recorder": {
+      "collection-name": "requests",
+      "tags": [
+        "login"
+      ],
+      "fieldExtractors": {
+        "path" : {
+          "username" : "/user/([a-z]*?)/books/[a-z]*",
+          "title" : "/user/[a-z]*?/books/([a-z]*)"
+        },
+        "body" : {
+          "isbn": "$.isbn"
+        }
+      }
+    }
+  }
+}
