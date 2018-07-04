@@ -16,7 +16,7 @@
     "mongo-request-recorder": {
       "collection-name": "requests",
       "tags": [
-        "login"
+        "add-book"
       ],
       "fieldExtractors": {
         "path" : {

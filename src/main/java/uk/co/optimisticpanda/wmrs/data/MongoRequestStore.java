@@ -10,7 +10,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.optimisticpanda.wmrs.Entry;
-import uk.co.optimisticpanda.wmrs.RequestStore;
+import uk.co.optimisticpanda.wmrs.core.RequestStore;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

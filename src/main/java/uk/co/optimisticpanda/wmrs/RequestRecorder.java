@@ -10,6 +10,7 @@ import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.google.common.collect.ImmutableMap;
 import com.jayway.jsonpath.JsonPath;
+import uk.co.optimisticpanda.wmrs.core.RequestStore;
 
 import java.util.LinkedHashMap;
 import java.util.List;

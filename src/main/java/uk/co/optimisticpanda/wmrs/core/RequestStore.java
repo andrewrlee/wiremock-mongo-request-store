@@ -1,4 +1,6 @@
-package uk.co.optimisticpanda.wmrs;
+package uk.co.optimisticpanda.wmrs.core;
+
+import uk.co.optimisticpanda.wmrs.Entry;
 
 public interface RequestStore {
 
