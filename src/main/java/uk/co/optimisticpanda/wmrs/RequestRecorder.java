@@ -1,23 +1,19 @@
 package uk.co.optimisticpanda.wmrs;
 
-import com.github.tomakehurst.wiremock.common.Metadata;
 import com.github.tomakehurst.wiremock.common.Urls;
 import com.github.tomakehurst.wiremock.core.Admin;
 import com.github.tomakehurst.wiremock.extension.Parameters;
 import com.github.tomakehurst.wiremock.extension.PostServeAction;
-import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.google.common.collect.ImmutableMap;
 import com.jayway.jsonpath.JsonPath;
 import uk.co.optimisticpanda.wmrs.core.RequestStore;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.common.Metadata.metadata;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 public class RequestRecorder extends PostServeAction {
 
@@ -30,14 +26,14 @@ public class RequestRecorder extends PostServeAction {
     @Override
     public void doAction(ServeEvent serveEvent, Admin admin, Parameters parameters) {
 
-        String storeName = parameters.getString("collection-name");
-        List<String> tags = parameters.getList("tags").stream().map(String::valueOf).collect(toList());
+        RequestRecorderParams params = parameters.as(RequestRecorderParams.class);
 
-        Metadata extractors = safeGet(parameters, "fieldExtractors");
+        String storeName = params.getCollectionName();
+        List<String> tags = params.getTags();
 
         Map<String, Object> fields = ImmutableMap.<String, Object>builder()
-                .putAll(bodyFields(serveEvent.getRequest(), extractors))
-                .putAll(pathFields(serveEvent.getRequest(), extractors))
+                .putAll(bodyFields(serveEvent.getRequest(), params.getBodyExtractors()))
+                .putAll(pathFields(serveEvent.getRequest(), params.getPathExtractors()))
                 .build();
 
         Entry entry = new Entry(
@@ -49,42 +45,22 @@ public class RequestRecorder extends PostServeAction {
         store.save(storeName, entry);
     }
 
-    private Map<String, Object> pathFields(LoggedRequest request, Metadata extractors) {
+    private Map<String, Object> bodyFields(LoggedRequest request, Map<String, String> bodyExtractors) {
 
-        Metadata fields = safeGet(extractors, "path");
+        String body = request.getBodyAsString();
 
-        Map<String, Object> data =  new LinkedHashMap<>();
+        return bodyExtractors.entrySet().stream().collect(toMap(
+                Map.Entry::getKey,
+                e -> JsonPath.read(body, e.getValue())));
+    }
+
+    private Map<String, Object> pathFields(LoggedRequest request, Map<String, String> pathExtractors) {
+
         String path = request.getUrl();
 
-        fields.forEach((key, value) -> {
-            String extractedValue = path.replaceFirst(String.valueOf(value), "$1");
-            data.put(key, Urls.decode(extractedValue));
-        });
-
-        return data;
-    }
-
-
-    private Map<String, Object> bodyFields(Request request, Metadata extractors) {
-
-        Metadata fields = safeGet(extractors, "body");
-
-        String bodyAsString = request.getBodyAsString();
-
-        Map<String, Object> data =  new LinkedHashMap<>();
-
-        fields.forEach((key, value) -> {
-            Object result = JsonPath.read(bodyAsString, value.toString());
-            data.put(key, result);
-        });
-
-        return data;
-    }
-
-    private Metadata safeGet(Metadata metadata, String name) {
-        return metadata.containsKey(name)
-                ? metadata.getMetadata(name)
-                : metadata().build();
+        return pathExtractors.entrySet().stream().collect(toMap(
+                Map.Entry::getKey,
+                e -> Urls.decode(path.replaceFirst(e.getValue(), "$1"))));
     }
 
     @Override

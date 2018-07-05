@@ -6,10 +6,10 @@ import com.github.tomakehurst.wiremock.core.Admin;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
+import uk.co.optimisticpanda.wmrs.RequestRecorderParams;
 
 import java.util.List;
 
-import static java.util.Map.Entry;
 import static java.util.stream.Collectors.toList;
 
 public class ListTags implements AdminTask {
@@ -22,8 +22,8 @@ public class ListTags implements AdminTask {
         List<?> tags = mappings.stream()
                 .flatMap(m -> m.getPostServeActions().entrySet().stream())
                 .filter(e -> e.getKey().equals("mongo-request-recorder"))
-                .map(Entry::getValue)
-                .flatMap(parameters -> parameters.getList("tags").stream())
+                .map(e -> e.getValue().as(RequestRecorderParams.class))
+                .flatMap(params-> params.getTags().stream())
                 .collect(toList());
 
         return ResponseDefinition.okForJson(tags);

@@ -6,8 +6,8 @@ import com.github.tomakehurst.wiremock.core.Admin;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
+import uk.co.optimisticpanda.wmrs.RequestRecorderParams;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import static java.util.stream.Collectors.toSet;
@@ -20,10 +20,8 @@ public class ListFields implements AdminTask {
         Object tags = mappings.stream()
                 .flatMap(m -> m.getPostServeActions().entrySet().stream())
                 .filter(e -> e.getKey().equals("mongo-request-recorder"))
-                .map(e -> e.getValue().getMetadata("fieldExtractors"))
-                .flatMap(e -> e.values().stream())
-                .map(LinkedHashMap.class::cast)
-                .flatMap(extractors -> extractors.keySet().stream())
+                .map(e -> e.getValue().as(RequestRecorderParams.class))
+                .flatMap(params -> params.getFields().stream())
                 .collect(toSet());
 
         return ResponseDefinition.okForJson(tags);
