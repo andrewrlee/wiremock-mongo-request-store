@@ -20,8 +20,8 @@
       ],
       "fieldExtractors": {
         "path" : {
-          "username" : "/user/([a-z]*?)/books/[a-z]*",
-          "title" : "/user/[a-z]*?/books/([a-z]*)"
+          "username" : "^/user/(.*?)/books/.*?$",
+          "title" :    "^/user/.*?/books/(.*)$"
         },
         "body" : {
           "isbn": "$.isbn"

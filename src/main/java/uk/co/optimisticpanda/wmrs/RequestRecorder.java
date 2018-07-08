@@ -9,10 +9,16 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.google.common.collect.ImmutableMap;
 import com.jayway.jsonpath.JsonPath;
 import uk.co.optimisticpanda.wmrs.core.RequestStore;
+import uk.co.optimisticpanda.wmrs.data.Entry;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toMap;
 
 public class RequestRecorder extends PostServeAction {
@@ -37,6 +43,7 @@ public class RequestRecorder extends PostServeAction {
                 .build();
 
         Entry entry = new Entry(
+                LocalDateTime.now(UTC),
                 serveEvent.getRequest(),
                 serveEvent.getResponseDefinition(),
                 tags,
@@ -56,11 +63,16 @@ public class RequestRecorder extends PostServeAction {
 
     private Map<String, Object> pathFields(LoggedRequest request, Map<String, String> pathExtractors) {
 
-        String path = request.getUrl();
+        String path = Urls.decode(request.getUrl());
 
-        return pathExtractors.entrySet().stream().collect(toMap(
-                Map.Entry::getKey,
-                e -> Urls.decode(path.replaceFirst(e.getValue(), "$1"))));
+        Map<String, Object> fields = new HashMap<>();
+        for (Map.Entry<String, String> entry : pathExtractors.entrySet()) {
+            Matcher matcher = Pattern.compile(entry.getValue()).matcher(path);
+            if (matcher.find()) {
+                fields.put(entry.getKey(), matcher.group(1));
+            }
+        }
+        return fields;
     }
 
     @Override

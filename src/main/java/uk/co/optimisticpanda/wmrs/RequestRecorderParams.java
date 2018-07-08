@@ -1,13 +1,18 @@
 package uk.co.optimisticpanda.wmrs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.tomakehurst.wiremock.core.Admin;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static java.util.Collections.emptyMap;
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.*;
 
 public class RequestRecorderParams {
 
@@ -19,6 +24,16 @@ public class RequestRecorderParams {
 
     @JsonProperty("fieldExtractors")
     private Map<String, Map<String, String>> fieldExtractors = new HashMap<>();
+
+    public static List<RequestRecorderParams> fromAdmin(Admin admin) {
+        List<StubMapping> mappings = admin.listAllStubMappings().getMappings();
+
+        return mappings.stream()
+                .flatMap(m -> m.getPostServeActions().entrySet().stream())
+                .filter(e -> e.getKey().equals("mongo-request-recorder"))
+                .map(e -> e.getValue().as(RequestRecorderParams.class))
+                .collect(toList());
+    }
 
     public String getCollectionName() {
         return requireNonNull(collectionName, "collection name must not be null");
