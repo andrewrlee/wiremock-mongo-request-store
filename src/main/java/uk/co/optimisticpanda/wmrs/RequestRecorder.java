@@ -34,7 +34,7 @@ public class RequestRecorder extends PostServeAction {
 
         RequestRecorderParams params = parameters.as(RequestRecorderParams.class);
 
-        String storeName = params.getCollectionName();
+        String storeName = params.getStoreName();
         List<String> tags = params.getTags();
 
         Map<String, Object> fields = ImmutableMap.<String, Object>builder()

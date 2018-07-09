@@ -35,7 +35,7 @@ public class RequestRecorderParams {
                 .collect(toList());
     }
 
-    public String getCollectionName() {
+    public String getStoreName() {
         return requireNonNull(collectionName, "collection name must not be null");
     }
 

@@ -13,6 +13,6 @@ public class SearchFieldsController implements AdminTask {
 
     @Override
     public ResponseDefinition execute(Admin admin, Request request, PathParams pathParams) {
-        return ResponseDefinition.okForJson(new SearchFields(admin));
+        return ResponseDefinition.okForJson(SearchFields.byStoreAndTag(admin));
     }
 }

@@ -17,6 +17,7 @@ public class StoreEndpoints implements AdminApiExtension {
     public void contributeAdminApiRoutes(Router router) {
 
         router.add(RequestMethod.GET, SearchFieldsController.PATH, new SearchFieldsController());
+        router.add(RequestMethod.GET, UIController.PATH, new UIController());
 
         router.add(RequestMethod.GET, AllEntriesController.PATH, new AllEntriesController(requestStore));
         router.add(RequestMethod.GET, EntriesByTagController.PATH, new EntriesByTagController(requestStore));
