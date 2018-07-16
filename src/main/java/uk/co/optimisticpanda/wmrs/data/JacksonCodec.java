@@ -17,16 +17,16 @@ class JacksonCodec<T> implements Codec<T> {
     private final Codec<RawBsonDocument> rawBsonDocumentCodec;
     private final Class<T> type;
 
-    public JacksonCodec(ObjectMapper objectMapper,
-                        CodecRegistry codecRegistry,
-                        Class<T> type) {
+    public JacksonCodec(final ObjectMapper objectMapper,
+                        final CodecRegistry codecRegistry,
+                        final Class<T> type) {
         this.objectMapper = objectMapper;
         this.rawBsonDocumentCodec = codecRegistry.get(RawBsonDocument.class);
         this.type = type;
     }
 
     @Override
-    public T decode(BsonReader reader, DecoderContext decoderContext) {
+    public T decode(final BsonReader reader, final DecoderContext decoderContext) {
         try {
 
             RawBsonDocument document = rawBsonDocumentCodec.decode(reader, decoderContext);
@@ -38,7 +38,7 @@ class JacksonCodec<T> implements Codec<T> {
     }
 
     @Override
-    public void encode(BsonWriter writer, Object value, EncoderContext encoderContext) {
+    public void encode(final BsonWriter writer, final Object value, final EncoderContext encoderContext) {
         try {
 
             String json = objectMapper.writeValueAsString(value);

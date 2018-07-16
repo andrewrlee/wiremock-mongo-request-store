@@ -15,12 +15,14 @@ import static java.time.ZoneOffset.UTC;
 
 public class JsonDates {
 
-    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     public static class Serializer extends JsonSerializer<LocalDateTime> {
 
         @Override
-        public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
+        public void serialize(final LocalDateTime value, final JsonGenerator gen, final SerializerProvider serializers)
+                throws IOException {
+
             String dateValue = value.format(DateTimeFormatter.ofPattern(TIMESTAMP_FORMAT));
             String text = "{ \"$date\" : \"" + dateValue + "\"}";
             gen.writeRawValue(text);
@@ -30,7 +32,7 @@ public class JsonDates {
     public static class Deserializer extends JsonDeserializer<LocalDateTime> {
 
         @Override
-        public LocalDateTime deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+        public LocalDateTime deserialize(final JsonParser parser, final DeserializationContext ctxt) throws IOException{
             ObjectCodec oc = parser.getCodec();
             JsonNode node = oc.readTree(parser);
             long dateValue = node.get("$date").longValue();

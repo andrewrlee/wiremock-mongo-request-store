@@ -19,4 +19,5 @@ dependencies {
             'com.squareup.okhttp3:okhttp:3.10.0',
             "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0"
 
+    testCompile 'org.assertj:assertj-core:3.10.0'
 }

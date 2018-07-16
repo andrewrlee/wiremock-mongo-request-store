@@ -7,15 +7,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import uk.co.optimisticpanda.wmrs.core.Entry;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Entry {
+public class StoredEntry implements Entry {
 
     static final String TAGS = "tags";
     static final String FIELDS = "fields";
@@ -39,14 +38,14 @@ public class Entry {
     @JsonProperty(FIELDS)
     private Map<String, Object> fields;
 
-    private Entry() {
+    private StoredEntry() {
     }
 
-    public Entry(LocalDateTime timestamp,
-                 Request request,
-                 ResponseDefinition response,
-                 List<String> tags,
-                 Map<String, Object> fields) {
+    public StoredEntry(final LocalDateTime timestamp,
+                       final Request request,
+                       final ResponseDefinition response,
+                       final List<String> tags,
+                       final Map<String, Object> fields) {
         this.timestamp = timestamp;
         this.request = request;
         this.response = response;
