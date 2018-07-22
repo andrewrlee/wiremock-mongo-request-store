@@ -21,7 +21,7 @@ public class AllEntriesController implements AdminTask {
 
     private final RequestStore requestStore;
 
-    public AllEntriesController(RequestStore requestStore) {
+    public AllEntriesController(final RequestStore requestStore) {
         this.requestStore = requestStore;
     }
 

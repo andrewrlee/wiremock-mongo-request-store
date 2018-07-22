@@ -16,9 +16,10 @@ public class StoreEndpoints implements AdminApiExtension {
     @Override
     public void contributeAdminApiRoutes(Router router) {
 
-        router.add(RequestMethod.GET, SearchFieldsController.PATH, new SearchFieldsController());
         router.add(RequestMethod.GET, UIController.PATH, new UIController());
+        router.add(RequestMethod.GET, ResourcesController.PATH, new ResourcesController());
 
+        router.add(RequestMethod.GET, SearchFieldsController.PATH, new SearchFieldsController());
         router.add(RequestMethod.GET, AllEntriesController.PATH, new AllEntriesController(requestStore));
         router.add(RequestMethod.GET, EntriesByTagController.PATH, new EntriesByTagController(requestStore));
     }
