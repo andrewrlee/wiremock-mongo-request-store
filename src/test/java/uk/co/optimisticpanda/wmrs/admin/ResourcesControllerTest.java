@@ -10,11 +10,11 @@ public class ResourcesControllerTest {
     @Test
     public void checkExtract() {
 
-        extractedResourceFor("store/resources/").isEqualTo("assets/");
-        extractedResourceFor("__admin/store/resources/").isEqualTo("assets/");
-        extractedResourceFor("__admin/store/resources/").isEqualTo("assets/");
-        extractedResourceFor("__admin/store/resources/main.css").isEqualTo("assets/main.css");
-        extractedResourceFor("__admin/store/resources/js/main.js").isEqualTo("assets/js/main.js");
+        extractedResourceFor("store/resources/").isEqualTo("public/resources/");
+        extractedResourceFor("__admin/store/resources/").isEqualTo("public/resources/");
+        extractedResourceFor("__admin/store/resources/").isEqualTo("public/resources/");
+        extractedResourceFor("__admin/store/resources/main.css").isEqualTo("public/resources/main.css");
+        extractedResourceFor("__admin/store/resources/js/main.js").isEqualTo("public/resources/js/main.js");
     }
 
     private AbstractCharSequenceAssert<?, String> extractedResourceFor(String path) {

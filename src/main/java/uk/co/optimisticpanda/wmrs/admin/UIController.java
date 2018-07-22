@@ -20,7 +20,7 @@ public class UIController implements AdminTask {
     @Override
     public ResponseDefinition execute(Admin admin, Request request, PathParams pathParams) {
         try {
-            byte[] content = toByteArray(Resources.getResource("index.html").openStream());
+            byte[] content = toByteArray(Resources.getResource("public/index.html").openStream());
             return responseDefinition()
                     .withStatus(200)
                     .withBody(content)

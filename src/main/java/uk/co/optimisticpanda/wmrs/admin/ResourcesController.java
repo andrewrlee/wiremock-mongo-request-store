@@ -19,7 +19,7 @@ import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.MediaType.ANY_TEXT_TYPE;
 
 public class ResourcesController implements AdminTask {
-    static final String PATH = "/store/resources/{}/{}";
+    static final String PATH = "/store/{}/{}/{}";
 
     private static final Map<String, MediaType> MEDIA_TYPE_MAP = ImmutableMap.<String, MediaType>builder()
             .put("css", MediaType.CSS_UTF_8)
@@ -49,6 +49,6 @@ public class ResourcesController implements AdminTask {
 
 
     public static String extractedResource(final String path) {
-        return "assets/" + path.replaceFirst(".*?store/resources/", "");
+        return "public/" + path.replaceFirst(".*?store/", "");
     }
 }

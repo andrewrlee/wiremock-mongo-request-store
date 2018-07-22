@@ -87,6 +87,13 @@ function Requests(props) {
 
   const entries = (props.results || {entries: []}).entries || []
 
+  const select = (result) => {
+    return e => {
+      e.preventDefault();
+      props.setValue("selectedItem", result.item);
+    }
+  }
+
   var timestamps = entries.map(item => {
     return {
       "id" : item.id,
@@ -98,7 +105,7 @@ function Requests(props) {
   const results = timestamps.map(result => {
       return (
         <li key={result.id}>
-          <a className='request' href="/" onClick={e => props.setValue("selectedItem", result.item)}>
+          <a className='request' href="/" onClick={select(result)}>
             {result.display}
           </a>
         </li>
