@@ -48,46 +48,57 @@ function Select(props) {
    )
 }
 
-class Search extends React.Component {
- render() {
-    return (
-      <form className="form-inline">
-        <div className="col-md-2 col-md-offset-2">
-          <Select id="store" label="Store" setValue={this.props.setValue} values={this.props.stores}/>
+function Search(props) {
+
+  const reload = (e) => {
+    e.preventDefault();
+    window.location.reload();
+  }
+
+  const search = (e) => {
+    e.preventDefault();
+    props.search();
+  }
+
+  return (
+    <form className="form-inline" onSubmit={search}>
+      <div className="col-md-2 col-md-offset-2">
+        <Select id="store" label="Store" setValue={props.setValue} values={props.stores}/>
+      </div>
+      <div className="col-md-2">
+        <Select id="tag" label="Tag" hasEmptyValue={true} setValue={props.setValue} values={props.tags}/>
+      </div>
+      <div className="col-md-4">
+        <Select id="field" label="Field" hasEmptyValue={true} setValue={props.setValue} values={props.fields}/>
+        <div className="form-group">
+          <input id="value" name="value" type="text" className="form-control"
+            onBlur={e => props.setValue(e.target.name, e.target.value)}></input>
         </div>
-        <div className="col-md-2">
-          <Select id="tag" label="Tag" hasEmptyValue={true} setValue={this.props.setValue} values={this.props.tags}/>
-        </div>
-        <div className="col-md-4">
-          <Select id="field" label="Field" hasEmptyValue={true} setValue={this.props.setValue} values={this.props.fields}/>
-          <div className="form-group">
-            <input id="value" name="value" type="text" className="form-control" onBlur={e => this.props.setValue(e.target.name, e.target.value)}></input>
-          </div>
-          <button id="search" type="submit" className="btn btn-default">Search</button>
-        </div>
-        <div className="col-sm-1 pull-right">
-          <button type="submit" className="btn btn-default">Clear</button>
-        </div>
-      </form>
-    );
-   }
+        <button id="search" type="submit" className="btn btn-default">Search</button>
+      </div>
+      <div className="col-sm-1 pull-right">
+        <button type="submit" className="btn btn-default" onClick={reload}>Clear</button>
+      </div>
+    </form>
+  );
 }
 
 function Requests(props) {
 
   const entries = (props.results || {entries: []}).entries || []
 
-  var timestamps = entries.map(d => {
+  var timestamps = entries.map(item => {
     return {
-      "id" : d.timestamp["$date"],
-      "display" : d.timestamp["$date"] + " (" + d.tags + ")"
+      "id" : item.timestamp["$date"],
+      "display" : item.timestamp["$date"] + " (" + item.tags + ")",
+      "item" : item
     }
   })
 
   const results = timestamps.map(result => {
       return (
         <li key={result.id}>
-          <a className='request' data-request-id={result.id}>
+          <a className='request' onClick={e => props.setValue("selectedItem", result.item)}>
             {result.display}
           </a>
         </li>
@@ -97,7 +108,7 @@ function Requests(props) {
   return (
     <div className="col-sm-3">
       <div className="panel panel-default tall-panel">
-        <h5>Requests</h5>
+        <h4>Requests</h4>
         <div id="requests" className="panel-body">
           <ul>
             {results}
@@ -109,18 +120,41 @@ function Requests(props) {
 }
 
 function Details(props) {
+  const selected = props.selectedItem;
+
+  if (!selected) {
+    return <div className="nothing-selected col-md-2 col-md-offset-2"><p>No item selected</p></div>
+  }
+
+  const tags = selected.tags.join(", ")
+  const fields = JSON.stringify(selected.fields, null, 2);
+
   return (
       <div className="col-sm-8 panel panel-default tall-panel">
-        <p><strong>Tags:</strong> <span id="details-tags"></span></p>
-        <p><strong>Fields:</strong> <span id="details-fields"></span></p>
+        <p><strong>Tags:</strong> <span>{tags}</span></p>
+        <p><strong>Timestamp: </strong><span>{selected.timestamp["$date"]}</span></p>
+        <p><strong>Fields:</strong> <span>{fields}</span></p>
         <div id='details' className="panel-body">
-          <div className="col-sm-6 panel panel-default tall-panel">
-            <h5>Request:</h5>
-            <pre><code id="details-req"></code></pre>
+          <div className="col-sm-6">
+            <h4>Request:</h4>
+            <p><strong>URL: </strong><span>{decodeURIComponent(selected.request.url)}</span></p>
+            <p><strong>Method: </strong><span>{selected.request.method}</span></p>
+            <p><strong>Headers:</strong></p>
+            <pre><code>{JSON.stringify(selected.request.headers, null, 2)}</code></pre>
+            <p><strong>Cookies:</strong></p>
+            <pre><code>{JSON.stringify(selected.request.cookies, null, 2)}</code></pre>
+
+            <p><strong>Body:</strong></p>
+            <pre><code>{selected.request.body}</code></pre>
+            <p><strong>Client IP: </strong><span>{selected.request.clientIp}</span></p>
+
           </div>
-          <div id="details-response" className="col-sm-6 panel panel-default tall-panel">
-            <h5>Response</h5>
-            <pre><code id="details-res"></code></pre>
+          <div id="details-response" className="col-sm-6">
+            <h4>Response</h4>
+            <p><strong>Status:</strong> <span>{selected.response.status}</span></p>
+            <p><strong>Body:</strong></p>
+
+            <pre><code id="details-res">{JSON.stringify(selected.response.body, null, 2)}</code></pre>
           </div>
         </div>
       </div>)
@@ -130,6 +164,7 @@ class Root extends React.Component {
   constructor(props) {
      super(props);
      this.setValue = this.setValue.bind(this);
+     this.search = this.search.bind(this);
 
      this.state = {
        error: null,
@@ -169,6 +204,7 @@ class Root extends React.Component {
         .then(
           (result) => {
             this.setState({results: result});
+
           },
           (error) => {
             this.setState({
@@ -178,10 +214,8 @@ class Root extends React.Component {
           });
     }
 
-
    setValue = function(name, value) {
-     const change = { [name] : value }
-     this.setState(change, this.search);
+     this.setState( { [name] : value }, this.search);
    }
 
    componentDidMount() {
@@ -208,18 +242,23 @@ class Root extends React.Component {
    render() {
     return (
       <div className="container-fluid">
-        <div className="row">
+        <div className="row content">
           <h2>Recorded Requests</h2>
           <Search
             stores = {this.state.stores}
             tags = {this.state.tags}
             fields = {this.state.fields}
+            search = {this.search}
             setValue = {this.setValue}
           />
         </div>
         <div className="results row">
-          <Requests results = {this.state.results}/>
-          <Details />
+          <Requests
+            results = {this.state.results}
+            setValue = {this.setValue}
+          />
+          <Details
+            selectedItem = {this.state.selectedItem}/>
         </div>
       </div>);
   }
