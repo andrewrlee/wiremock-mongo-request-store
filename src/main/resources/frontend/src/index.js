@@ -98,7 +98,7 @@ function Requests(props) {
   const results = timestamps.map(result => {
       return (
         <li key={result.id}>
-          <a className='request' onClick={e => props.setValue("selectedItem", result.item)}>
+          <a className='request' href="/" onClick={e => props.setValue("selectedItem", result.item)}>
             {result.display}
           </a>
         </li>
@@ -185,8 +185,8 @@ class Root extends React.Component {
       const value = this.state.value;
 
       var url = (tag === "")
-          ? 'http://localhost:8080/__admin/store/' + store + '/entries/'
-          : 'http://localhost:8080/__admin/store/' + store + '/entries/tag/' + tag;
+          ? '/__admin/store/' + store + '/entries/'
+          : '/__admin/store/' + store + '/entries/tag/' + tag;
 
       const encodeGetParams = p => Object.entries(p)
                      .map(kv => kv.map(encodeURIComponent).join("="))
@@ -199,7 +199,6 @@ class Root extends React.Component {
 
     search = function() {
       const url = this.getUrl();
-      console.log("search", url)
       fetch(url)
         .then(res => res.json())
         .then(
@@ -220,7 +219,7 @@ class Root extends React.Component {
    }
 
    componentDidMount() {
-     fetch('http://localhost:8080/__admin/store/fields')
+     fetch('/__admin/store/fields')
        .then(res => res.json())
        .then(
          (result) => {
