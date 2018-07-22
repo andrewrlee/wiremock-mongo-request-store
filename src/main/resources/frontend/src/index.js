@@ -89,7 +89,7 @@ function Requests(props) {
 
   var timestamps = entries.map(item => {
     return {
-      "id" : item.timestamp["$date"],
+      "id" : item.id,
       "display" : item.timestamp["$date"] + " (" + item.tags + ")",
       "item" : item
     }
@@ -193,12 +193,13 @@ class Root extends React.Component {
                      .join("&");
 
       return (field && value)
-         ? url + encodeGetParams({ [field] : value })
+         ? url + "?" + encodeGetParams({ [field] : value })
          : url;
     }
 
     search = function() {
       const url = this.getUrl();
+      console.log("search", url)
       fetch(url)
         .then(res => res.json())
         .then(

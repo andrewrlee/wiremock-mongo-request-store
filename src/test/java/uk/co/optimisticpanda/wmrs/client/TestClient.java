@@ -18,9 +18,15 @@ public class TestClient {
         client.login("bob", "password-1");
 
         client.addBook("bob", "Catcher In The Rye", "isbn-1");
-        client.addBook("bob", "Far from the Madding Crowd", "isbn-2");
 
+        client.login("jim", "password-2");
+        client.addBook("jim", "Moby Dick", "isbn-3");
+        client.addBook("jim", "Catcher In The Rye", "isbn-1");
+
+        client.addBook("bob", "Far from the Madding Crowd", "isbn-2");
         client.logout("bob");
+        client.logout("jim");
+
     }
 
     private void addBook(String username, String title, String isbn) {

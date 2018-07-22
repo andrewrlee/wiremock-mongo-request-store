@@ -12,6 +12,7 @@ import uk.co.optimisticpanda.wmrs.core.Entry;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StoredEntry implements Entry {
@@ -19,6 +20,9 @@ public class StoredEntry implements Entry {
     static final String TAGS = "tags";
     static final String FIELDS = "fields";
     static final String TIMESTAMP = "timestamp";
+
+    @JsonProperty("id")
+    private UUID id;
 
     @JsonSerialize(using= JsonDates.Serializer.class)
     @JsonDeserialize(using = JsonDates.Deserializer.class)
@@ -46,6 +50,7 @@ public class StoredEntry implements Entry {
                        final ResponseDefinition response,
                        final List<String> tags,
                        final Map<String, Object> fields) {
+        this.id = UUID.randomUUID();
         this.timestamp = timestamp;
         this.request = request;
         this.response = response;
