@@ -32,7 +32,7 @@ function Select(props) {
    const optionsStart = props.hasEmptyValue ? [""] : [];
 
    const options = optionsStart.concat(props.values).map((val, step) => {
-    return (<option key={step} value={val}>{val}</option>)
+    return (<option key={val} value={val}>{val}</option>)
    });
 
   return (
@@ -135,9 +135,9 @@ function Requests(props) {
         }
 
         const tags = selected.tags.join(", ")
-  const fields = JSON.stringify(selected.fields, null, 2);
+        const fields = JSON.stringify(selected.fields, null, 2);
 
-  return (
+        return (
       <div className="col-sm-8 panel panel-default tall-panel">
         <p><strong>Tags:</strong> <span>{tags}</span></p>
         <p><strong>Timestamp: </strong><span>{selected.timestamp["$date"]}</span></p>
@@ -226,6 +226,10 @@ class Root extends React.Component {
     search = function() {
       const url = this.getUrl();
       this.loadResults(url);
+      if (this.state.tag) {
+        var fields = this.state.allFields[this.state.store][this.state.tag];
+        this.setState({"fields" :  fields, "value": null});
+      }
     }
 
    loadNext = function() {
@@ -253,8 +257,7 @@ class Root extends React.Component {
          (result) => {
           const fields = extractFields(result);
           const newState = Object.assign(
-            {isLoaded: true, store: fields.stores[0] },
-              extractFields(result));
+            {isLoaded: true, allFields: result, store: fields.stores[0] }, fields);
           this.setState(newState);
           this.search();
          },
