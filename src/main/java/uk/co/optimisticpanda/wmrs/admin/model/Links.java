@@ -15,10 +15,7 @@ public class Links {
 
 
     public static List<Link> create(final Request request) {
-        System.out.println("request url: " + request.getUrl());
-        System.out.println("request absolute url: " + request.getAbsoluteUrl());
         String baseUrl = "/__admin" + request.getUrl().replaceAll("\\?.*$", "");
-        System.out.println("replaced: " + baseUrl);
         ImmutableList.Builder<Link> links = ImmutableList.builder();
 
         return links
