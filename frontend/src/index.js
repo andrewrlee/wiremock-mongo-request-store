@@ -95,18 +95,17 @@ function Requests(props) {
   })
 
   const results = timestamps.map(result => {
-    return (<li key={result.id}>
-      <a className='request' href="/" onClick={select(result)}>
+    const classes = result.id === (props.selectedItem || {id: ''}).id ? 'request list-group-item active' : 'request list-group-item';
+    return (<a className={classes} key={result.id} href="/" onClick={select(result)}>
         {result.display}
-      </a>
-    </li>)
+      </a>)
   });
 
   return (<div className="col-sm-3">
     <div className="panel panel-default tall-panel">
       <h4>Requests</h4>
       <div id="requests" className="panel-body">
-        <ul>
+        <ul className="list-group">
           {results}
         </ul>
         <button onClick={props.loadPrevious}>Previous</button>
@@ -127,6 +126,9 @@ function Details(props) {
 
   const tags = selected.tags.join(", ")
   const fields = JSON.stringify(selected.fields, null, 2);
+  const entity = selected.request.body
+    ? JSON.stringify(JSON.parse(selected.request.body), null, 2)
+    : "";
 
   return (<div className="col-sm-8 panel panel-default tall-panel">
     <p>
@@ -167,7 +169,7 @@ function Details(props) {
         <p>
           <strong>Body:</strong>
         </p>
-        <pre><code>{selected.request.body}</code></pre>
+        <pre><code>{entity}</code></pre>
         <p>
           <strong>Client IP:
           </strong>
@@ -292,7 +294,12 @@ class Root extends React.Component {
         <Search stores={this.state.stores} tags={this.state.tags} fields={this.state.fields} search={this.search} setValue={this.setValue}/>
       </div>
       <div className="results row">
-        <Requests results={this.state.results} setValue={this.setValue} loadNext={this.loadNext} loadPrevious={this.loadPrevious}/>
+        <Requests
+          results={this.state.results}
+          selectedItem={this.state.selectedItem}
+          setValue={this.setValue}
+          loadNext={this.loadNext}
+          loadPrevious={this.loadPrevious}/>
         <Details selectedItem={this.state.selectedItem}/>
       </div>
     </div>);

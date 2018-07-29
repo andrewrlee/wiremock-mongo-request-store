@@ -1,9 +1,15 @@
+html,body { height:100%; }
+
 .results {
    padding-top: 20px;
 }
 
 .content {
   padding-left: 50px
+}
+
+.request {
+ font-size: 12px
 }
 
 .nothing-selected {
@@ -14,7 +20,6 @@
 }
 
 .tall-panel {
-    height:80vh;
     padding-left: 15px;
     padding-top: 20px;
 }
