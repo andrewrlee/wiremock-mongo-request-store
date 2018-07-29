@@ -23,6 +23,11 @@ public class QueryParameters {
             .map(Integer::valueOf);
     }
 
+    public static Optional<Integer> offset(final Request request) {
+        return firstQueryParam(request, "offset")
+                .map(Integer::valueOf);
+    }
+
     public static Optional<LocalDateTime> since(final Request request) {
         return firstQueryParam(request, "since")
                 .map(val -> LocalDateTime.parse(val, ISO_DATE_TIME));

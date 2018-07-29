@@ -100,7 +100,8 @@ public class MongoRequestStore implements RequestStore {
                 collectionFor(query.getStoreName())
                         .find(queries.isEmpty() ? new Document() : Filters.and(queries))
                         .sort(descending(TIMESTAMP))
-                        .limit(query.getLimit().orElse(0)));
+                        .skip(query.getOffset().orElse(0))
+                        .limit(query.getLimit().orElse(25)));
     }
 
     private void checkCollectionExists(final String storeName) {

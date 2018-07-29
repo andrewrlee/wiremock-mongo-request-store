@@ -120,20 +120,21 @@ function Requests(props) {
           <ul>
             {results}
           </ul>
+          <button onClick={props.loadPrevious}>Previous</button>
+          <button onClick={props.loadNext}>Next</button>
         </div>
       </div>
-    </div>
-  );
-}
-
-function Details(props) {
-  const selected = props.selectedItem;
-
-  if (!selected) {
-    return <div className="nothing-selected col-md-2 col-md-offset-2"><p>No item selected</p></div>
+    </div>);
   }
 
-  const tags = selected.tags.join(", ")
+      function Details(props) {
+        const selected = props.selectedItem;
+
+        if (!selected) {
+          return <div className="nothing-selected col-md-2 col-md-offset-2"><p>No item selected</p></div>
+        }
+
+        const tags = selected.tags.join(", ")
   const fields = JSON.stringify(selected.fields, null, 2);
 
   return (
@@ -172,6 +173,8 @@ class Root extends React.Component {
      super(props);
      this.setValue = this.setValue.bind(this);
      this.search = this.search.bind(this);
+     this.loadPrevious = this.loadPrevious.bind(this);
+     this.loadNext = this.loadNext.bind(this);
 
      this.state = {
        error: null,
@@ -188,8 +191,6 @@ class Root extends React.Component {
     getUrl = function() {
       const store = this.state.store;
       const tag = this.state.tag;
-      const field = this.state.field;
-      const value = this.state.value;
 
       var url = (tag === "")
           ? '/__admin/store/' + store + '/entries/'
@@ -199,19 +200,20 @@ class Root extends React.Component {
                      .map(kv => kv.map(encodeURIComponent).join("="))
                      .join("&");
 
+     const field = this.state.field;
+     const value = this.state.value;
+
       return (field && value)
          ? url + "?" + encodeGetParams({ [field] : value })
          : url;
     }
 
-    search = function() {
-      const url = this.getUrl();
+    loadResults = function(url) {
       fetch(url)
         .then(res => res.json())
         .then(
           (result) => {
             this.setState({results: result});
-
           },
           (error) => {
             this.setState({
@@ -220,6 +222,25 @@ class Root extends React.Component {
             });
           });
     }
+
+    search = function() {
+      const url = this.getUrl();
+      this.loadResults(url);
+    }
+
+   loadNext = function() {
+     const links  = (this.state.results || {links: []}).links
+     if (links.next) {
+       this.loadResults(links.next);
+     }
+   }
+
+   loadPrevious = function() {
+     const links  = (this.state.results || {links: []}).links
+     if (links.previous) {
+       this.loadResults(links.previous);
+     }
+   }
 
    setValue = function(name, value) {
      this.setState( { [name] : value }, this.search);
@@ -263,6 +284,8 @@ class Root extends React.Component {
           <Requests
             results = {this.state.results}
             setValue = {this.setValue}
+            loadNext = {this.loadNext}
+            loadPrevious = {this.loadPrevious}
           />
           <Details
             selectedItem = {this.state.selectedItem}/>
@@ -270,7 +293,6 @@ class Root extends React.Component {
       </div>);
   }
 }
-
 
 ReactDOM.render(
   <Root />,

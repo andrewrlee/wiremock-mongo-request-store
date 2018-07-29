@@ -14,6 +14,7 @@ public class RequestQuery {
     private String tag;
     private Map<String, String> fieldsToMatch = new TreeMap<>();
     private Integer limit;
+    private Integer offset;
     private LocalDateTime since;
 
     private RequestQuery(final Builder builder) {
@@ -21,6 +22,7 @@ public class RequestQuery {
         tag = builder.tag;
         fieldsToMatch.putAll(builder.fieldsToMatch);
         limit = builder.limit;
+        offset = builder.offset;
         since = builder.since;
     }
 
@@ -44,6 +46,10 @@ public class RequestQuery {
         return Optional.ofNullable(limit);
     }
 
+    public Optional<Integer> getOffset() {
+        return Optional.ofNullable(offset);
+    }
+
     public Optional<LocalDateTime> getSince() {
         return Optional.ofNullable(since);
     }
@@ -61,6 +67,7 @@ public class RequestQuery {
                 && Objects.equals(tag, that.tag)
                 && Objects.equals(fieldsToMatch, that.fieldsToMatch)
                 && Objects.equals(limit, that.limit)
+                && Objects.equals(offset, that.offset)
                 && Objects.equals(since, that.since);
     }
 
@@ -76,6 +83,7 @@ public class RequestQuery {
                 .add("tag", tag)
                 .add("fieldsToMatch", fieldsToMatch)
                 .add("limit", limit)
+                .add("offset", offset)
                 .add("since", since)
                 .toString();
     }
@@ -85,6 +93,7 @@ public class RequestQuery {
         private String tag;
         private Map<String, String> fieldsToMatch = new TreeMap<>();
         private Integer limit;
+        private Integer offset;
         private LocalDateTime since;
 
         private Builder(final String storeName) {
@@ -103,6 +112,11 @@ public class RequestQuery {
 
         public Builder withLimit(final Integer val) {
             limit = val;
+            return this;
+        }
+
+        public Builder withOffset(final Integer val) {
+            offset = val;
             return this;
         }
 
