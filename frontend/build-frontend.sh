@@ -2,7 +2,7 @@
 
 set -e
 
-cd "$(dirname "$0")/frontend";
+cd "$(dirname "$0")";
 
 ASSETS_DIR=../src/main/resources/public/
 

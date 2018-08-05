@@ -54,7 +54,7 @@ function Search(props) {
   }
 
   return (<form className="form-inline" onSubmit={search}>
-    <div className="col-md-2 col-md-offset-2">
+    <div className="col-md-2 col-md-offset-1">
       <Select id="store" label="Store" setValue={props.setValue} values={props.stores}/>
     </div>
     <div className="col-md-2">
@@ -97,8 +97,8 @@ function Requests(props) {
   const results = timestamps.map(result => {
     const classes = result.id === (props.selectedItem || {id: ''}).id ? 'request list-group-item active' : 'request list-group-item';
     return (<a className={classes} key={result.id} href="/" onClick={select(result)}>
-        {result.display}
-      </a>)
+      {result.display}
+    </a>)
   });
 
   return (<div className="col-sm-3">
@@ -149,7 +149,7 @@ function Details(props) {
         <h4>Request:</h4>
         <p>
           <strong>URL:
-          </strong>
+          </strong>d
           <span>{decodeURIComponent(selected.request.url)}</span>
         </p>
         <p>
@@ -217,6 +217,10 @@ class Root extends React.Component {
     const store = this.state.store;
     const tag = this.state.tag;
 
+    if (!store) {
+      return;
+    }
+
     var url = (tag === "")
       ? '/__admin/store/' + store + '/entries/'
       : '/__admin/store/' + store + '/entries/tag/' + tag;
@@ -241,6 +245,9 @@ class Root extends React.Component {
 
   search = function() {
     const url = this.getUrl();
+    if (!url) {
+      return;
+    }
     this.loadResults(url);
     if (this.state.tag) {
       var fields = this.state.allFields[this.state.store][this.state.tag];
