@@ -19,7 +19,7 @@ import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.MediaType.ANY_TEXT_TYPE;
 
 public class ResourcesController implements AdminTask {
-    static final String PATH = "/store/{}/{}/{}";
+    static final String PATH = "/store/static/{}/{}";
 
     private static final Map<String, MediaType> MEDIA_TYPE_MAP = ImmutableMap.<String, MediaType>builder()
             .put("css", MediaType.CSS_UTF_8)
@@ -31,6 +31,10 @@ public class ResourcesController implements AdminTask {
 
     @Override
     public ResponseDefinition execute(final Admin admin, final Request request, final PathParams pathParams) {
+
+        System.out.println("aaa: " + pathParams.get("aaa"));
+        System.out.println("bbb: " + pathParams.get("bbb"));
+        System.out.println("ccc: " + pathParams.get("ccc"));
 
         String extension = Files.getFileExtension(request.getUrl());
         String resource = extractedResource(request.getUrl());

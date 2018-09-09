@@ -8,13 +8,22 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static java.util.Collections.singletonList;
 import static uk.co.optimisticpanda.wmrs.admin.model.QueryParameters.limit;
 import static uk.co.optimisticpanda.wmrs.admin.model.QueryParameters.offset;
 
 public class Links {
 
 
-    public static List<Link> create(final Request request) {
+    public static List<Link> forEntry(final String id) {
+        return singletonList(detailsLink(id));
+    }
+
+    private static Link detailsLink(final String id) {
+        return new Link("detail", "/__admin/store/requests/entries/" + id);
+    }
+
+    public static List<Link> forPage(final Request request) {
         String baseUrl = "/__admin" + request.getUrl().replaceAll("\\?.*$", "");
         ImmutableList.Builder<Link> links = ImmutableList.builder();
 
@@ -25,8 +34,8 @@ public class Links {
     }
 
     private static Link previousLink(final String baseUrl,
-                                               final Integer offset,
-                                               final Integer limit) {
+                                     final Integer offset,
+                                     final Integer limit) {
         int previousOffset = Math.max(offset - limit, 0);
         return new Link("previous", baseUrl + "?offset=" + previousOffset);
     }
@@ -36,6 +45,7 @@ public class Links {
                                  final Integer limit) {
         return new Link("next", baseUrl + "?offset=" + (offset + limit));
     }
+
 
 
     public static class Link {

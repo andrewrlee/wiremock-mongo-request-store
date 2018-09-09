@@ -79,12 +79,6 @@ function Requests(props) {
     entries: []
   }).entries || []
 
-  const select = (result) => {
-    return e => {
-      e.preventDefault();
-      props.setValue("selectedItem", result.item);
-    }
-  }
 
   var timestamps = entries.map(item => {
     return {
@@ -96,7 +90,7 @@ function Requests(props) {
 
   const results = timestamps.map(result => {
     const classes = result.id === (props.selectedItem || {id: ''}).id ? 'request list-group-item active' : 'request list-group-item';
-    return (<a className={classes} key={result.id} href="/" onClick={select(result)}>
+    return (<a className={classes} key={result.id} href="/" onClick={props.selectItem(result)}>
       {result.display}
     </a>)
   });
@@ -132,47 +126,51 @@ function Details(props) {
 
   return (<div className="col-sm-8 panel panel-default tall-panel">
     <p>
-      <strong>Tags:</strong>
+      <strong>Tags:&nbsp;</strong>
       <span>{tags}</span>
     </p>
     <p>
-      <strong>Timestamp:
-      </strong>
+      <strong>Timestamp:&nbsp;</strong>
       <span>{selected.timestamp["$date"]}</span>
     </p>
     <p>
-      <strong>Fields:</strong>
+      <strong>Fields:&nbsp;</strong>
       <span>{fields}</span>
     </p>
     <div id='details' className="panel-body">
       <div className="col-sm-6">
-        <h4>Request:</h4>
+        <h4>Request:&nbsp;</h4>
         <p>
-          <strong>URL:
-          </strong>d
+          <strong>URL:&nbsp;</strong>
           <span>{decodeURIComponent(selected.request.url)}</span>
         </p>
         <p>
-          <strong>Method:
-          </strong>
+          <strong>Method:&nbsp;</strong>
           <span>{selected.request.method}</span>
         </p>
         <p>
-          <strong>Headers:</strong>
+          <strong>Headers:&nbsp;</strong>
         </p>
         <pre><code>{JSON.stringify(selected.request.headers, null, 2)}</code></pre>
-        <p>
-          <strong>Cookies:</strong>
-        </p>
-        <pre><code>{JSON.stringify(selected.request.cookies, null, 2)}</code></pre>
+        { Object.keys(selected.request.cookies).length !== 0 &&
+          <div>
+            <p>
+              <strong>Cookies:&nbsp;</strong>
+            </p>
+            <pre><code>{JSON.stringify(selected.request.cookies, null, 2)}</code></pre>
+          </div>
+        }
 
+        { entity !== '' &&
+          <div>
+            <p>
+              <strong>Body:&nbsp;</strong>
+            </p>
+            <pre><code>{entity}</code></pre>
+          </div>
+        }
         <p>
-          <strong>Body:</strong>
-        </p>
-        <pre><code>{entity}</code></pre>
-        <p>
-          <strong>Client IP:
-          </strong>
+          <strong>Client IP:&nbsp;</strong>
           <span>{selected.request.clientIp}</span>
         </p>
 
@@ -180,11 +178,11 @@ function Details(props) {
       <div id="details-response" className="col-sm-6">
         <h4>Response</h4>
         <p>
-          <strong>Status:</strong>
+          <strong>Status:&nbsp;</strong>
           <span>{selected.response.status}</span>
         </p>
         <p>
-          <strong>Body:</strong>
+          <strong>Body:&nbsp;</strong>
         </p>
 
         <pre><code id="details-res">{JSON.stringify(selected.response.body, null, 2)}</code></pre>
@@ -200,6 +198,7 @@ class Root extends React.Component {
     this.search = this.search.bind(this);
     this.loadPrevious = this.loadPrevious.bind(this);
     this.loadNext = this.loadNext.bind(this);
+    this.selectItem = this.selectItem.bind(this);
 
     this.state = {
       error: null,
@@ -279,6 +278,20 @@ class Root extends React.Component {
     }, this.search);
   }
 
+  selectItem = function(result) {
+    return e => {
+      e.preventDefault();
+      let selectedUrl = result.item.links.detail;
+      console.log(selectedUrl)
+      fetch(selectedUrl).then(res => res.json()).then((result) => {
+        console.log(selectedUrl, result)
+        this.setState({selectedItem: result});
+      }, (error) => {
+        this.setState({isLoaded: true, error});
+      });
+    }
+  }
+
   componentDidMount() {
     fetch('/__admin/store/fields').then(res => res.json()).then((result) => {
       const fields = extractFields(result);
@@ -304,6 +317,8 @@ class Root extends React.Component {
         <Requests
           results={this.state.results}
           selectedItem={this.state.selectedItem}
+          selectItem={this.selectItem}
+
           setValue={this.setValue}
           loadNext={this.loadNext}
           loadPrevious={this.loadPrevious}/>

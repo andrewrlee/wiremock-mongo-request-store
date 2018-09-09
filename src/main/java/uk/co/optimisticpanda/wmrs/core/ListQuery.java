@@ -8,7 +8,7 @@ import java.util.TreeMap;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
-public class RequestQuery {
+public class ListQuery {
 
     private final String storeName;
     private String tag;
@@ -17,7 +17,7 @@ public class RequestQuery {
     private Integer offset;
     private LocalDateTime since;
 
-    private RequestQuery(final Builder builder) {
+    private ListQuery(final Builder builder) {
         storeName = builder.storeName;
         tag = builder.tag;
         fieldsToMatch.putAll(builder.fieldsToMatch);
@@ -62,7 +62,7 @@ public class RequestQuery {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RequestQuery that = (RequestQuery) o;
+        ListQuery that = (ListQuery) o;
         return Objects.equals(storeName, that.storeName)
                 && Objects.equals(tag, that.tag)
                 && Objects.equals(fieldsToMatch, that.fieldsToMatch)
@@ -125,8 +125,8 @@ public class RequestQuery {
             return this;
         }
 
-        public RequestQuery build() {
-            return new RequestQuery(this);
+        public ListQuery build() {
+            return new ListQuery(this);
         }
     }
 }

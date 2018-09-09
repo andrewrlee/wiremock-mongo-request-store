@@ -57,4 +57,9 @@ public class StoredEntry implements Entry {
         this.tags = tags;
         this.fields =  fields;
     }
+
+    @Override
+    public String getId() {
+        return id.toString();
+    }
 }

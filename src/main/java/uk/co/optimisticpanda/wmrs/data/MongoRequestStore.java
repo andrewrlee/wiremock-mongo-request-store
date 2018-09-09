@@ -9,14 +9,15 @@ import com.mongodb.async.client.MongoClient;
 import com.mongodb.async.client.MongoClients;
 import com.mongodb.async.client.MongoCollection;
 import com.mongodb.async.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.optimisticpanda.wmrs.core.Entry;
-import uk.co.optimisticpanda.wmrs.core.RequestQuery;
+import uk.co.optimisticpanda.wmrs.core.EntryQuery;
+import uk.co.optimisticpanda.wmrs.core.ListQuery;
 import uk.co.optimisticpanda.wmrs.core.RequestStore;
 
 import java.util.ArrayList;
@@ -37,9 +38,11 @@ import static com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_SINGLE_QUOTES;
 import static com.fasterxml.jackson.core.JsonParser.Feature.IGNORE_UNDEFINED;
 import static com.google.common.base.Preconditions.checkState;
 import static com.mongodb.async.client.MongoClients.getDefaultCodecRegistry;
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gte;
 import static com.mongodb.client.model.Filters.in;
+import static com.mongodb.client.model.Projections.include;
 import static com.mongodb.client.model.Sorts.descending;
 import static java.time.ZoneOffset.UTC;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -86,7 +89,17 @@ public class MongoRequestStore implements RequestStore {
     }
 
     @Override
-    public List<? extends Entry> query(final RequestQuery query) {
+    public Entry query(final EntryQuery query) {
+        checkCollectionExists(query.getStoreName());
+
+        return syncQuery(
+                collectionFor(query.getStoreName())
+                        .find(eq("id", query.getId())))
+                .iterator().next();
+    }
+
+    @Override
+    public List<? extends Entry> query(final ListQuery query) {
 
         checkCollectionExists(query.getStoreName());
 
@@ -98,10 +111,11 @@ public class MongoRequestStore implements RequestStore {
 
         return syncQuery(
                 collectionFor(query.getStoreName())
-                        .find(queries.isEmpty() ? new Document() : Filters.and(queries))
+                        .find(queries.isEmpty() ? new Document() : and(queries))
                         .sort(descending(TIMESTAMP))
                         .skip(query.getOffset().orElse(0))
-                        .limit(query.getLimit().orElse(25)));
+                        .projection(include("id", "timestamp", "tags"))
+                        .limit(query.getLimit().orElse(12)));
     }
 
     private void checkCollectionExists(final String storeName) {

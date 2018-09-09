@@ -6,6 +6,7 @@ public interface RequestStore {
 
     void save(String storeName, Entry entry);
 
-    List<? extends Entry> query(RequestQuery query);
+    List<? extends Entry> query(ListQuery query);
 
+    Entry query(EntryQuery query);
 }
