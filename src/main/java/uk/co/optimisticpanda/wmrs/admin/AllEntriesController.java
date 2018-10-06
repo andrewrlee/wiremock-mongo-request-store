@@ -7,16 +7,16 @@ import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import uk.co.optimisticpanda.wmrs.admin.model.EntryWithLinks;
 import uk.co.optimisticpanda.wmrs.admin.model.Links;
-import uk.co.optimisticpanda.wmrs.admin.model.Results;
 import uk.co.optimisticpanda.wmrs.admin.model.PerStubConfigurationsExtractor;
+import uk.co.optimisticpanda.wmrs.admin.model.Results;
 import uk.co.optimisticpanda.wmrs.core.Entry;
-import uk.co.optimisticpanda.wmrs.core.PerStubConfigurations;
 import uk.co.optimisticpanda.wmrs.core.ListQuery;
+import uk.co.optimisticpanda.wmrs.core.PerStubConfigurations;
 import uk.co.optimisticpanda.wmrs.core.RequestStore;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 import static uk.co.optimisticpanda.wmrs.admin.model.QueryParameters.extractMatchingParams;
 import static uk.co.optimisticpanda.wmrs.admin.model.QueryParameters.limit;
 import static uk.co.optimisticpanda.wmrs.admin.model.QueryParameters.offset;

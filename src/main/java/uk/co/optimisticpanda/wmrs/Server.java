@@ -1,9 +1,7 @@
 package uk.co.optimisticpanda.wmrs;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
 import com.github.tomakehurst.wiremock.common.SingleRootFileSource;
-import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.optimisticpanda.wmrs.admin.StoreEndpoints;
@@ -16,7 +14,7 @@ import uk.co.optimisticpanda.wmrs.listener.extractors.UrlPathFieldExtractor;
 import java.io.File;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
 
 public class Server {

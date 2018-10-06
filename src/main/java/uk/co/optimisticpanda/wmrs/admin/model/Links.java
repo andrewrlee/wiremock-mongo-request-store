@@ -14,6 +14,8 @@ import static uk.co.optimisticpanda.wmrs.admin.model.QueryParameters.offset;
 
 public class Links {
 
+    private Links() {
+    }
 
     public static List<Link> forEntry(final String id) {
         return singletonList(detailsLink(id));
@@ -94,5 +96,4 @@ public class Links {
                     .toString();
         }
     }
-
 }

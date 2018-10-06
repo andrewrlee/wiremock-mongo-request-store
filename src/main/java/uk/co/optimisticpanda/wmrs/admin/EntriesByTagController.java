@@ -10,8 +10,8 @@ import uk.co.optimisticpanda.wmrs.admin.model.Links;
 import uk.co.optimisticpanda.wmrs.admin.model.PerStubConfigurationsExtractor;
 import uk.co.optimisticpanda.wmrs.admin.model.Results;
 import uk.co.optimisticpanda.wmrs.core.Entry;
-import uk.co.optimisticpanda.wmrs.core.PerStubConfigurations;
 import uk.co.optimisticpanda.wmrs.core.ListQuery;
+import uk.co.optimisticpanda.wmrs.core.PerStubConfigurations;
 import uk.co.optimisticpanda.wmrs.core.RequestStore;
 
 import java.util.List;

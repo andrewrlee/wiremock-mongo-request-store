@@ -27,6 +27,4 @@ public class EntryController implements AdminTask {
 
         return ResponseDefinition.okForJson(requestStore.query(query));
     }
-
-
 }

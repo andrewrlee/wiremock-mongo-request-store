@@ -9,7 +9,6 @@ import com.mongodb.async.client.MongoClient;
 import com.mongodb.async.client.MongoClients;
 import com.mongodb.async.client.MongoCollection;
 import com.mongodb.async.client.MongoDatabase;
-import com.mongodb.client.model.Projections;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
@@ -56,8 +55,8 @@ public class MongoRequestStore implements RequestStore {
     private static final Logger L = LoggerFactory.getLogger(MongoRequestStore.class);
 
     private final MongoDatabase database;
-    private final Map<String, MongoCollection<StoredEntry>> collections = new ConcurrentHashMap<>();
     private final CodecRegistry codecRegistry;
+    private final Map<String, MongoCollection<StoredEntry>> collections = new ConcurrentHashMap<>();
 
     public MongoRequestStore(final String connectionString, final String database) {
 
@@ -90,6 +89,7 @@ public class MongoRequestStore implements RequestStore {
 
     @Override
     public Entry query(final EntryQuery query) {
+
         checkCollectionExists(query.getStoreName());
 
         return syncQuery(
