@@ -56,6 +56,7 @@ public class MongoRequestStore implements RequestStore {
 
     private final MongoDatabase database;
     private final CodecRegistry codecRegistry;
+    private final DatabaseIndexer databaseIndexer = new DatabaseIndexer();
     private final Map<String, MongoCollection<StoredEntry>> collections = new ConcurrentHashMap<>();
 
     public MongoRequestStore(final String connectionString, final String database) {
@@ -80,10 +81,13 @@ public class MongoRequestStore implements RequestStore {
     @Override
     public void save(final String storeName, final Entry entry) {
 
-        collectionFor(storeName).insertOne(StoredEntry.class.cast(entry), (result, ex) -> {
+        MongoCollection<StoredEntry> collection = collectionFor(storeName);
+
+        collection.insertOne(StoredEntry.class.cast(entry), (result, ex) -> {
             if (ex != null) {
                 L.error("Failed to insert entry: {}", entry, ex);
             }
+            databaseIndexer.ensureFieldsIndexed(collection, entry.getTags());
         });
     }
 
@@ -109,8 +113,10 @@ public class MongoRequestStore implements RequestStore {
         query.getSince().ifPresent(since-> queries.add(gte(TIMESTAMP, Date.from(since.toInstant(UTC)))));
         query.getFieldsToMatch().forEach((field, value) -> queries.add(eq("fields." + field, value)));
 
+        MongoCollection<StoredEntry> collection = collectionFor(query.getStoreName());
+
         return syncQuery(
-                collectionFor(query.getStoreName())
+                collection
                         .find(queries.isEmpty() ? new Document() : and(queries))
                         .sort(descending(TIMESTAMP))
                         .skip(query.getOffset().orElse(0))
@@ -144,10 +150,15 @@ public class MongoRequestStore implements RequestStore {
     }
 
     private MongoCollection<StoredEntry> createCollection(final String collectionName) {
-        return database
+
+        MongoCollection<StoredEntry> collection = database
                 .getCollection(collectionName, StoredEntry.class)
                 .withCodecRegistry(codecRegistry)
                 .withDocumentClass(StoredEntry.class);
+
+        databaseIndexer.ensureDefaultFieldsIndexed(collection);
+
+        return collection;
     }
 
     private List<StoredEntry> syncQuery(final FindIterable<StoredEntry> iterable) {

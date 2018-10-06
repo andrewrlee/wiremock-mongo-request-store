@@ -7,6 +7,7 @@ import uk.co.optimisticpanda.wmrs.core.Entry;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static uk.co.optimisticpanda.wmrs.admin.model.Links.Link;
 
@@ -25,5 +26,10 @@ public class EntryWithLinks implements Entry {
     @Override
     public String getId() {
         return entry.getId();
+    }
+
+    @Override
+    public Set<String> getTags() {
+        return entry.getTags();
     }
 }

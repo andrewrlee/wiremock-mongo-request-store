@@ -7,21 +7,24 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import com.google.common.collect.ImmutableSet;
 import uk.co.optimisticpanda.wmrs.core.Entry;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StoredEntry implements Entry {
 
+    static final String ID = "id";
     static final String TAGS = "tags";
     static final String FIELDS = "fields";
     static final String TIMESTAMP = "timestamp";
 
-    @JsonProperty("id")
+    @JsonProperty(ID)
     private UUID id;
 
     @JsonSerialize(using= JsonDates.Serializer.class)
@@ -61,5 +64,9 @@ public class StoredEntry implements Entry {
     @Override
     public String getId() {
         return id.toString();
+    }
+
+    public Set<String> getTags() {
+        return ImmutableSet.copyOf(tags);
     }
 }
