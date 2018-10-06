@@ -15,6 +15,7 @@ import uk.co.optimisticpanda.wmrs.core.PerStubConfigurations;
 import uk.co.optimisticpanda.wmrs.core.RequestStore;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 import static uk.co.optimisticpanda.wmrs.admin.model.QueryParameters.extractMatchingParams;
@@ -38,7 +39,9 @@ public class EntriesByTagController implements AdminTask {
         PerStubConfigurations configurations = PerStubConfigurationsExtractor.fromAdmin(admin);
         String tag = pathParams.get("tag");
 
-        ListQuery query = ListQuery.forStore(pathParams.get("store-name"))
+        String storeName = pathParams.get("store-name");
+
+        ListQuery query = ListQuery.forStore(storeName)
                 .withTag(tag)
                 .withFieldsToMatch(extractMatchingParams(request, configurations.searchFieldsForTag(tag)))
                 .withLimit(limit(request).orElse(null))
@@ -47,12 +50,12 @@ public class EntriesByTagController implements AdminTask {
                 .build();
 
         List<? extends Entry> entries = requestStore.query(query);
-        List<? extends Entry> result = entries.stream().map(this::withLinks).collect(toList());
+        List<? extends Entry> result = entries.stream().map(withLinks(storeName)).collect(toList());
 
         return ResponseDefinition.okForJson(new Results(result, Links.forPage(request)));
     }
 
-    private Entry withLinks(final Entry entry) {
-        return new EntryWithLinks(entry, Links.forEntry(entry.getId()));
+    private Function<Entry, Entry> withLinks(final String store) {
+        return e -> new EntryWithLinks(e, Links.forEntry(store, e.getId()));
     }
 }

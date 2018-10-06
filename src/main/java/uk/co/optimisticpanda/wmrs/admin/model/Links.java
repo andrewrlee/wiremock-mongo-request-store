@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static uk.co.optimisticpanda.wmrs.admin.model.QueryParameters.limit;
 import static uk.co.optimisticpanda.wmrs.admin.model.QueryParameters.offset;
@@ -17,12 +18,12 @@ public class Links {
     private Links() {
     }
 
-    public static List<Link> forEntry(final String id) {
-        return singletonList(detailsLink(id));
+    public static List<Link> forEntry(final String store, final String id) {
+        return singletonList(detailsLink(store, id));
     }
 
-    private static Link detailsLink(final String id) {
-        return new Link("detail", "/__admin/store/requests/entries/" + id);
+    private static Link detailsLink(final String store, final String id) {
+        return new Link("detail", format("/__admin/store/%s/entries/%s", store, id));
     }
 
     public static List<Link> forPage(final Request request) {
