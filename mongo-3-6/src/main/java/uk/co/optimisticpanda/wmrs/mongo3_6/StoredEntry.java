@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import uk.co.optimisticpanda.wmrs.core.Entry;
 
@@ -48,16 +49,17 @@ public class StoredEntry implements Entry {
     private StoredEntry() {
     }
 
-    public StoredEntry(final LocalDateTime timestamp,
+    public StoredEntry(final UUID id,
+                       final LocalDateTime timestamp,
                        final Request request,
                        final ResponseDefinition response,
-                       final List<String> tags,
+                       final Set<String> tags,
                        final Map<String, Object> fields) {
-        this.id = UUID.randomUUID();
+        this.id = id;
         this.timestamp = timestamp;
         this.request = request;
         this.response = response;
-        this.tags = tags;
+        this.tags = ImmutableList.copyOf(tags);
         this.fields =  fields;
     }
 

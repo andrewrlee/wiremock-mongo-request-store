@@ -3,8 +3,6 @@ package uk.co.optimisticpanda.wmrs.mongo3_6;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
-import com.github.tomakehurst.wiremock.http.ResponseDefinition;
-import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.mongodb.ConnectionString;
 import com.mongodb.async.client.FindIterable;
 import com.mongodb.async.client.MongoClient;
@@ -18,10 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.optimisticpanda.wmrs.core.Entry;
 import uk.co.optimisticpanda.wmrs.core.EntryQuery;
+import uk.co.optimisticpanda.wmrs.core.EntryToStore;
 import uk.co.optimisticpanda.wmrs.core.ListQuery;
 import uk.co.optimisticpanda.wmrs.core.RequestStore;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -82,11 +80,19 @@ public class MongoRequestStore implements RequestStore {
     }
 
     @Override
-    public void save(final String storeName, final Entry entry) {
+    public void save(final String storeName, final EntryToStore entry) {
 
         MongoCollection<StoredEntry> collection = collectionFor(storeName);
 
-        collection.insertOne(StoredEntry.class.cast(entry), (result, ex) -> {
+        StoredEntry storedEntry = new StoredEntry(
+                entry.getId(),
+                entry.getTimestamp(),
+                entry.getRequest(),
+                entry.getResponse(),
+                entry.getTags(),
+                entry.getFields());
+
+        collection.insertOne(storedEntry, (result, ex) -> {
             if (ex != null) {
                 L.error("Failed to insert entry: {}", entry, ex);
             }
@@ -103,18 +109,6 @@ public class MongoRequestStore implements RequestStore {
                 collectionFor(query.getStoreName())
                         .find(eq("id", query.getId())))
                 .iterator().next();
-    }
-
-    /**
-     * @deprecated merge with save and add a command object - to prevent unnecessary casting.
-     */
-    @Override
-    public Entry newEntry(final LocalDateTime now,
-                          final LoggedRequest request,
-                          final ResponseDefinition responseDefinition,
-                          final List<String> tags,
-                          final Map<String, Object> fields) {
-        return new StoredEntry(now, request, responseDefinition, tags, fields);
     }
 
     @Override
