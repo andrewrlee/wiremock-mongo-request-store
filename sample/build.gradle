@@ -1,0 +1,12 @@
+
+apply plugin: 'application'
+mainClassName = 'uk.co.optimisticpanda.wmrs.sample.Server'
+apply plugin: 'com.github.johnrengelman.plugin-shadow'
+
+
+dependencies {
+
+    compile project(':core'),
+            project(':mongo-3-6')
+
+}

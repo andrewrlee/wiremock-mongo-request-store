@@ -1,0 +1,10 @@
+
+apply plugin: 'java-library'
+
+dependencies {
+
+    compile project(':core'),
+            'org.mongodb:mongodb-driver-async:3.6.3',
+            'org.mongodb:mongo-java-driver:3.6.3'
+
+}

@@ -1,14 +1,9 @@
 
-apply plugin: 'application'
-mainClassName = 'uk.co.optimisticpanda.wmrs.Server'
-apply plugin: 'com.github.johnrengelman.plugin-shadow'
-
+apply plugin: 'java-library'
 
 dependencies {
 
     compile 'com.github.tomakehurst:wiremock:2.18.0',
-            'org.mongodb:mongodb-driver-async:3.6.3',
-            'org.mongodb:mongo-java-driver:3.6.3',
             'ch.qos.logback:logback-classic:1.0.9',
             'com.squareup.okhttp3:okhttp:3.10.0',
             "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0"

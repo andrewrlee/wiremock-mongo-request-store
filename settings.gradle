@@ -1,3 +1,5 @@
 rootProject.name = 'wiremock-mongo-request-store'
 
-include 'core'
+include 'core',
+        'mongo-3-6',
+        'sample'
