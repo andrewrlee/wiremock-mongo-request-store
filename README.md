@@ -110,8 +110,7 @@ TODO:
 
 The web interface can be accessed at: `/__admin/store/`
 
-TODO:
-  * Add image
+![Web Interface](./Screenshot.png)
 
 ## Building
 
