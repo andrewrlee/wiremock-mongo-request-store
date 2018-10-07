@@ -10,6 +10,6 @@ echo 'Building app';
 ./gradlew --quiet clean build
 
 echo 'Running app';
-java -jar build/libs/wiremock-mongo-request-store-1.0-SNAPSHOT-all.jar src/main/resources/requests/
+java -jar sample/build/libs/wiremock-mongo-request-store-1.0-SNAPSHOT-all.jar src/main/resources/requests/
 
 
