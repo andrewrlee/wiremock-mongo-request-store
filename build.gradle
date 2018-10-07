@@ -8,30 +8,16 @@ buildscript {
 }
 
 
-apply plugin: 'java'
-apply plugin: 'application'
-mainClassName = 'uk.co.optimisticpanda.wmrs.Server'
-apply plugin: 'com.github.johnrengelman.plugin-shadow'
+subprojects {
 
-group 'uk.co.optimisticpanda'
-version '1.0-SNAPSHOT'
+    apply plugin: 'java'
+    group 'uk.co.optimisticpanda'
+    version '1.0-SNAPSHOT'
 
+    sourceCompatibility = 1.8
 
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-    maven { url "https://dl.bintray.com/ylemoigne/maven" }
-}
-
-dependencies {
-
-    compile 'com.github.tomakehurst:wiremock:2.18.0',
-            'org.mongodb:mongodb-driver-async:3.6.3',
-            'org.mongodb:mongo-java-driver:3.6.3',
-            'ch.qos.logback:logback-classic:1.0.9',
-            'com.squareup.okhttp3:okhttp:3.10.0',
-            "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0"
-
-    testCompile 'org.assertj:assertj-core:3.10.0'
+    repositories {
+        mavenCentral()
+        maven { url "https://dl.bintray.com/ylemoigne/maven" }
+    }
 }
