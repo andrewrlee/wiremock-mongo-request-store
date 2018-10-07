@@ -1,6 +1,6 @@
 .gradle/
 .idea/
 out/
-mongo/data
+docker/mongo/data
 
 build/

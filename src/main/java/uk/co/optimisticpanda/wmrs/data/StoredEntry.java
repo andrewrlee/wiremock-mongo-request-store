@@ -62,10 +62,21 @@ public class StoredEntry implements Entry {
     }
 
     @Override
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public Map<String, Object> getFields() {
+        return fields;
+    }
+
+    @Override
     public String getId() {
         return id.toString();
     }
 
+    @Override
     public Set<String> getTags() {
         return ImmutableSet.copyOf(tags);
     }

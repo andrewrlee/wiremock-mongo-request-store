@@ -31,7 +31,6 @@ public class PerStubConfiguration {
         fieldExtractors = builder.fieldExtractors;
     }
 
-
     private PerStubConfiguration() {
     }
 

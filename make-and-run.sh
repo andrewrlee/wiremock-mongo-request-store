@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo 'Starting mongo docker image'
-./mongo/start-mongo.sh 
+./docker/mongo/start-mongo.sh
 
 echo 'Building frontend'
 ./frontend/build-frontend.sh 
