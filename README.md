@@ -1,4 +1,4 @@
-# wiremock-mongo-request-store
+# Wiremock Mongo Request Store
 
 By default wiremock stores requests in memory.
 
@@ -38,7 +38,7 @@ TODO: Look at simplifying extension registration
 
 To allow a request to be captured, add the following post serve action to a mapping:
 
-```
+```json
   "postServeActions": {
     "mongo-request-recorder": {
       "collection-name": "requests"
@@ -53,7 +53,7 @@ Extractors can be added to mappings to allow certain key values to be extracted 
 Requests can then be queried using these key value pairs over the REST api and in the UI.
 Values under the stored keys will automatically be indexed.
 
-```
+```json
   "postServeActions": {
     "mongo-request-recorder": {
       "collection-name": "requests",
@@ -71,14 +71,15 @@ Values under the stored keys will automatically be indexed.
 
 ```
 
-TODO: Add mechanism to allow dynamically adding custom extractors - at the moment this is hardcoded into the extension object marshalling
-TODO: Explain inbuilt custom extractors
+TODO:
+  * Add mechanism to allow dynamically adding custom extractors - at the moment this is hardcoded into the extension object marshalling
+  * Explain inbuilt custom extractors
 
 ## Tagging
 
 Requests can be tagged with one or more tags which can then be used for filtering through the REST api and in the UI:
 
-```
+```json
   "postServeActions": {
     "mongo-request-recorder": {
       "collection-name": "requests",
@@ -100,15 +101,17 @@ The following rest apis can be accessed under: `/__admin/`:
  * /store/{store-name}/entries/{entry}
  * /store/static/{}/{}
 
-TODO: Expand on description
-TODO: Add OpenApi/Raml specs
-TODO: sort out naming around store-name and collection-name
+TODO:
+  * Expand on description
+  * Add OpenApi/Raml specs
+  * Sort out naming around store-name and collection-name
 
 ## Web interface
 
 The web interface can be accessed at: `/__admin/store/`
 
-TODO: Add image
+TODO:
+  * Add image
 
 ## Building
 
@@ -125,15 +128,18 @@ This will start a mongo service, build the web interface, and build and run the 
 
 Once complete, the UI should be accessible under: `http://localhost:8080/__admin/store/`
 
-TODO look at building with a single docker instance.
+TODO:
+  * look at building with a single docker instance.
 
 ## Other
 
-TODO Split out test project, rather than having server main in prod code.
-TODO look at supporting a JDBC impl
-TODO look at supporting a different mongo versions
-TODO Release to maven repo.
-TODO CI
-TODO tests!
-TODO Move to kotlin/java10?
+TODO:
+  * Split out test project, rather than having server main in prod code.
+  * Explain relationship between inbuilt api and this api - there isn't one
+  * look at supporting a JDBC impl
+  * look at supporting a different mongo versions
+  * Release to maven repo.
+  * CI
+  * tests!
+  * Move to kotlin/java10?
 
