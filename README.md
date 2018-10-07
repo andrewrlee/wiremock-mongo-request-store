@@ -134,7 +134,6 @@ TODO:
 ## Other
 
 TODO:
-  * Split out test project, rather than having server main in prod code.
   * Explain relationship between inbuilt api and this api - there isn't one
   * look at supporting a JDBC impl
   * look at supporting a different mongo versions

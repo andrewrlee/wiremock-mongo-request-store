@@ -1,4 +1,4 @@
-package uk.co.optimisticpanda.sample;
+package uk.co.optimisticpanda.wmrs.sample;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.SingleRootFileSource;

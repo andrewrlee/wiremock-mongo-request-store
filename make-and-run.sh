@@ -7,9 +7,9 @@ echo 'Building frontend'
 ./frontend/build-frontend.sh 
 
 echo 'Building app';
-./gradlew --quiet clean build
+./gradlew --quiet clean build sample:shadowJar
 
 echo 'Running app';
-java -jar sample/build/libs/wiremock-mongo-request-store-1.0-SNAPSHOT-all.jar src/main/resources/requests/
+java -jar sample/build/libs/sample-1.0-SNAPSHOT-all.jar sample/src/main/resources/requests/
 
 
