@@ -1,6 +1,6 @@
 # Wiremock Mongo Request Store
 
-By default wiremock stores requests in memory.
+Wiremock stores received requests in memory.
 
 This extension stores requests in a mongo database and provides a web UI and a REST api to allow searching over those requests.
 
@@ -122,7 +122,7 @@ Dependencies:
 
 to build and start the mock service run:
 
-./make-and-run.sh
+`./make-and-run.sh`
 
 This will start a mongo service, build the web interface, and build and run the java application.
 
